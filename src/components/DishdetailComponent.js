@@ -1,6 +1,7 @@
-import React from 'react';
-import { Card, CardImg, CardBody, CardText, CardTitle,Breadcrumb,BreadcrumbItem } from 'reactstrap';
+import React,{Component} from 'react';
+import {Card,CardImg,CardBody,CardTitle,CardText,Breadcrumb,BreadcrumbItem,Button,Modal,ModalHeader,ModalBody,Row,Col,Label} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import {LocalForm,Control,Errors} from 'react-redux-form';
 
     function RenderComments({comments}) {
         if (comments == null) {
@@ -27,7 +28,7 @@ import {Link} from 'react-router-dom';
                 <ul className='list-unstyled'>
                     {cmnts}
                 </ul>
-
+                <CommentForm />
             </div>
         )
     }
@@ -50,6 +51,95 @@ import {Link} from 'react-router-dom';
             return (<div></div>)
         }
     }
+
+
+  const required = (val) => val && val.length;
+  const minLength = (len) => (val) => val && (val.length>=len);
+  const maxLength = (len) => (val) => val && (val.length<=len);
+
+class CommentForm extends Component{
+
+  constructor(props){
+    super(props);
+
+    this.state=({
+      isModalOpen: false
+    });
+    
+    this.toggleModal= this.toggleModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  toggleModal(){
+    this.setState({
+      isModalOpen: !this.state.isModalOpen
+    })
+  }
+
+  handleSubmit(values){
+    this.toggleModal();
+    console.log("Current State is: " + JSON.stringify(values));
+    alert("Current state is: " + JSON.stringify(values));
+  }
+
+  render(){
+    return(
+    <div className="col-auto">
+      <Button outline onClick={this.toggleModal}><span className="fa fa-pencil fa-lg"> Submit Comment</span></Button>
+      <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+        <ModalHeader toggle={this.toggleModal}>
+          Submit Comment
+        </ModalHeader>
+        <ModalBody>
+          <LocalForm onSubmit={(values)=> this.handleSubmit(values)}>
+            <Row className="form-group">
+              <Label htmlFor="rating" md={2}>Rating</Label>
+              <Col xs={12}>
+                <Control.select model=".rating" id="rating" name="rating" className="form-control">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Control.select>
+              </Col>
+            </Row>
+            <Row className="form-group">
+              <Label htmlFor="yourname" xs={12}>Your Name</Label>
+              <Col xs={12}>
+                <Control.text model=".author" name="yourname" id="yourname" placeholder="Your Name" className="form-control"
+                  validators={{
+                    required,minLength: minLength(3),maxLength: maxLength(15)
+                  }} />
+                <Errors
+                  className="text-danger"
+                  model=".author"
+                  show="touched"
+                  messages={{
+                    required: ' Required ',
+                    minLength: ' Must be greater than or equal to 3 characters ',
+                    maxLength: 'Must be less than or equal to 15 characters'
+                  }} />
+              </Col>
+            </Row>
+            <Row className="form-group">
+              <Label htmlFor="comment" xs={12}>Comment</Label>
+              <Col xs={12}>
+                <Control.textarea model=".comment" name="comment" id="comment" className="form-control" rows={6} />
+              </Col>
+            </Row>
+            <Row className="form-group">
+              <Col xs={12}>
+                <Button className="bg-primary" type="submit">Submit</Button>
+              </Col>
+            </Row>
+          </LocalForm>
+        </ModalBody>
+      </Modal>
+    </div>
+    );
+  }
+}
 
     const Dishdetail = (props)=> {
         if (props.dish == null) {
