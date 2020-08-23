@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {LocalForm,Control,Errors} from 'react-redux-form';
 import {Loading} from './LoadingComponent';
 import {baseUrl} from '../shared/baseUrl';
+import {FadeTransform,Fade,Stagger} from 'react-animation-components';
 
     function RenderComments({comments,postComment,dishId}) {
         if (comments == null) {
@@ -11,6 +12,7 @@ import {baseUrl} from '../shared/baseUrl';
         }
         const cmnts = comments.map(comment => {
             return (
+              <Fade in>
                 <li key={comment.id}>
                     <p>{comment.comment}</p>
                     <p>-- {comment.author},
@@ -22,13 +24,16 @@ import {baseUrl} from '../shared/baseUrl';
                         }).format(new Date(Date.parse(comment.date)))}
                     </p>
                 </li>
+              </Fade>
             )
         })
         return (
             <div className='col-12 col-md-5 m-1'>
                 <h4> Comments </h4>
                 <ul className='list-unstyled'>
+                  <Stagger in>
                     {cmnts}
+                  </Stagger>
                 </ul>
                 <CommentForm dishId={dishId} postComment={postComment} />
             </div>
@@ -39,6 +44,10 @@ import {baseUrl} from '../shared/baseUrl';
         if (dish != null) {
             return (
                 <div className='col-12 col-md-5 m-1'>
+                  <FadeTransform in
+                    transformProps={{
+                      exitTransform: 'scale(0.5) translateY(-50%)'
+                  }}>
                     <Card>
                         <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
                         <CardBody>
@@ -46,6 +55,7 @@ import {baseUrl} from '../shared/baseUrl';
                             <CardText>{dish.description}</CardText>
                         </CardBody>
                     </Card>
+                  </FadeTransform>
                 </div>
             )
         }
