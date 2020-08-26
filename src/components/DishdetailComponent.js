@@ -8,9 +8,9 @@ import {FadeTransform,Fade,Stagger} from 'react-animation-components';
 
     function RenderComments({comments,postComment,dishId}) {
         if (comments == null) {
-            return (<div></div>)
+            return (<div>Hello ji</div>)
         }
-        const cmnts = comments.map(comment => {
+        const cmnts = comments.map((comment) => {
             return (
               <Fade in>
                 <li key={comment.id}>
@@ -41,7 +41,6 @@ import {FadeTransform,Fade,Stagger} from 'react-animation-components';
     }
 
     function RenderDish({dish}) {
-        if (dish != null) {
             return (
                 <div className='col-12 col-md-5 m-1'>
                   <FadeTransform in
@@ -58,10 +57,6 @@ import {FadeTransform,Fade,Stagger} from 'react-animation-components';
                   </FadeTransform>
                 </div>
             )
-        }
-        else {
-            return (<div></div>)
-        }
     }
 
 
